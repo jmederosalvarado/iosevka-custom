@@ -101,7 +101,7 @@ jobs:
           name: iosevka-custom
           path: unpatched
       - name: Patch fonts
-        run: docker run -v ${{ github.workspace }}/unpatched:/in -v ${{ github.workspace }}/patched:/out nerdfonts/patcher -q -c || true
+        run: docker run -v ${{ github.workspace }}/unpatched:/in -v ${{ github.workspace }}/patched:/out nerdfonts/patcher -q -w -c || true
       - name: Create release archives
         run: cd patched && zip -r ../ttf-iosevka-custom-nf-windows.zip .
       - name: Release
