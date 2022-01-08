@@ -104,6 +104,10 @@ jobs:
         with:
           repository: ryanoasis/nerd-fonts
           ref: feature/allow-downscaling-nonmono
+      - name: Download patch
+        run: curl -fsSLO "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/src/font-patcher-patch.diff" -o font-patcher.patch
+      - name: Apply patch
+        run: git apply src/font-patcher-patch.diff
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
