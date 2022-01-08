@@ -95,13 +95,20 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-iosevka
     steps:
+      - name: Checkout nerdfonts repo
+        uses: actions/checkout@v2
+        with:
+          repository: https://github.com/ryanoasis/nerd-fonts
+          ref: feature/allow-downscaling-nonmono
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
           name: iosevka-custom
           path: unpatched
+      - name: Create out dir
+        run: mkdir -p patched
       - name: Patch fonts
-        run: docker run -v ${{ github.workspace }}/unpatched:/in -v ${{ github.workspace }}/patched:/out nerdfonts/patcher -q -w -c || true
+        run: for f in unpatched/*.ttf; do [ -f "$f" ] && fontforge -script ./font-patcher -out ./patched -q -c -w "$f"; done
       - name: Create release archives
         run: cd patched && zip -r ../ttf-iosevka-custom-nf-windows.zip .
       - name: Release
