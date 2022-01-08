@@ -95,6 +95,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-iosevka
     steps:
+      - name: Setup dependencies
+        run: |
+          sudo apt-get install fontforge python3 python-is-pyton3 python-pip -y;
+          pip install configparser
       - name: Checkout nerdfonts repo
         uses: actions/checkout@v2
         with:
