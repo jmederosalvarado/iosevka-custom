@@ -98,7 +98,7 @@ jobs:
       - name: Checkout nerdfonts repo
         uses: actions/checkout@v2
         with:
-          repository: https://github.com/ryanoasis/nerd-fonts
+          repository: ryanoasis/nerd-fonts
           ref: feature/allow-downscaling-nonmono
       - name: Download artifacts
         uses: actions/download-artifact@v2
