@@ -71,7 +71,7 @@ jobs:
           tag_name: ${{ needs.build-iosevka.outputs.version }}
           files: ttf-iosevka-custom.zip
 
-  patch-iosevka-unix:
+  patch-iosevka:
     runs-on: ubuntu-latest
     needs: build-iosevka
     steps:
@@ -90,38 +90,3 @@ jobs:
           name: Iosevka Custom ${{ needs.build-iosevka.outputs.version }}
           tag_name: ${{ needs.build-iosevka.outputs.version }}
           files: ttf-iosevka-custom-nf.zip
-
-  patch-iosevka-windows:
-    runs-on: ubuntu-latest
-    needs: build-iosevka
-    steps:
-      - name: Setup dependencies
-        run: |
-          sudo apt-get install fontforge python3 python3-pip python-is-python3 -y;
-          pip install configparser
-      - name: Checkout nerdfonts repo
-        uses: actions/checkout@v2
-        with:
-          repository: ryanoasis/nerd-fonts
-          ref: feature/allow-downscaling-nonmono
-      - name: Download patch
-        run: curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/src/font-patcher-patch.diff" -o font-patcher.patch
-      - name: Apply patch
-        run: git apply ./font-patcher.patch
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: iosevka-custom
-          path: unpatched
-      - name: Create out dir
-        run: mkdir -p patched
-      - name: Patch fonts
-        run: for f in unpatched/*.ttf; do [ -f "$f" ] && fontforge -script ./font-patcher -out ./patched -q -c -w "$f"; done
-      - name: Create release archives
-        run: cd patched && zip -r ../ttf-iosevka-custom-nf-windows.zip .
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: Iosevka Custom ${{ needs.build-iosevka.outputs.version }}
-          tag_name: ${{ needs.build-iosevka.outputs.version }}
-          files: ttf-iosevka-custom-nf-windows.zip
