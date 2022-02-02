@@ -72,7 +72,7 @@ jobs:
 
         # we already have:  --powerline --powerlineextra
         # think about these:  --powersymbols
-        run: docker run -v ${{ github.workspace }}/unpatched:/in -v ${{ github.workspace }}/patched:/out nerdfonts/patcher -q --careful --pomicons --fontawesome --fontawesomeextension --material --weather --fontlogos --octicons --codeicons || true
+        run: docker run -v ${{ github.workspace }}/unpatched:/in -v ${{ github.workspace }}/patched:/out nerdfonts/patcher -q --careful --pomicons --fontawesome --fontawesomeextension --material --weather --fontlogos --octicons --codicons || true
       - name: Summary
         run: tree
       - name: Create release archives
