@@ -68,6 +68,8 @@ jobs:
       - name: Clone nerd-fonts repo without checkout
         run: git clone --filter=blob:none --no-checkout https://github.com/ryanoasis/nerd-fonts .
       - name: Checkout master branch and initialize sparse-checkout
-        run: git checkout master && git sparse-checkout set font-patcher src/glyphs
+        run: git checkout master
+      - name: Initialize sparse-checkout
+        run: git sparse-checkout set font-patcher src/glyphs
       - name: Summary
         run: tree
