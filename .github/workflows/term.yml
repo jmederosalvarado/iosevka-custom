@@ -18,20 +18,20 @@ jobs:
         id: cache
         with:
           path: *.ttf
-          key: ${{ env.IOSEVKA_VERSION }}-normal
-      - name: Download iosevka
+          key: ${{ env.IOSEVKA_VERSION }}-term
+      - name: Download iosevka term
         if: steps.cache.outputs.cache-hit != 'true'
-        run: curl -fsSLO https://github.com/be5invis/Iosevka/releases/download/v${{ env.IOSEVKA_VERSION }}/ttf-iosevka-${{ env.IOSEVKA_VERSION }}.zip
-      - name: Unzip iosevka
+        run: curl -fsSLO https://github.com/be5invis/Iosevka/releases/download/v${{ env.IOSEVKA_VERSION }}/ttf-iosevka-term-${{ env.IOSEVKA_VERSION }}.zip
+      - name: Unzip iosevka term
         if: steps.cache.outputs.cache-hit != 'true'
-        run: unzip ttf-iosevka-${{ env.IOSEVKA_VERSION }}.zip iosevka-{regular,bold,italic,bolditalic}.ttf
+        run: unzip ttf-iosevka-term-${{ env.IOSEVKA_VERSION }}.zip iosevka-term-{regular,bold,italic,bolditalic}.ttf
       - name: Remove zip
         run: rm *.zip
       - name: Upload artifacts
         if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/upload-artifact@v2
         with:
-          name: iosevka
+          name: iosevka-term
           path: *.ttf
       - name: Summary
         run: tree
@@ -43,15 +43,15 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: iosevka
+          name: iosevka-term
       - name: Create release archives
-        run: zip ttf-iosevka.zip .
+        run: zip ttf-iosevka-term.zip .
       - name: Create and upload release
         uses: softprops/action-gh-release@v1
         with:
           name: Iosevka
           tag_name: latest
-          files: ttf-iosevka.zip
+          files: ttf-iosevka-term.zip
 
   patch:
     runs-on: ubuntu-latest
