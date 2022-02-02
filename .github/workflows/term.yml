@@ -69,7 +69,7 @@ jobs:
           mkdir -p fontforge/build && cd fontforge/build
           sudo cmake -GNinja .. && sudo ninja && sudo ninja install
       - name: Delete fontforge artifacts
-        run: rm -rf fontforge
+        run: sudo rm -rf fontforge
       - name: Sparse clone nerd-fonts repo
         run: git clone --filter=blob:none --sparse https://github.com/ryanoasis/nerd-fonts .
       - name: Set sparse-checkout patterns
