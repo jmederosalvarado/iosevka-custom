@@ -57,22 +57,37 @@ jobs:
     runs-on: ubuntu-latest
     needs: download
     steps:
-      # - name: Sparse clone nerd-fonts repo
-      #   run: git clone --filter=blob:none --sparse https://github.com/ryanoasis/nerd-fonts .
-      # - name: Set sparse-checkout patterns
-      #   run: git sparse-checkout set font-patcher src/glyphs
+      - name: Install fontforge build deps
+        run: sudo apt-get install libjpeg-dev libtiff5-dev libpng-dev libfreetype6-dev libgif-dev libgtk-3-dev libxml2-dev libpango1.0-dev libcairo2-dev libspiro-dev python3-dev ninja-build cmake build-essential gettext -y -q
+      - name: Checkout fontforge
+        uses: actions/checkout@v2
+        with:
+          repository: fontforge/fontforge
+          path: fontforge
+      - name: Build fontforge from source
+        run: |
+          mkdir -p fontforge/build && cd fontforge/build
+          sudo cmake -GNinja .. && sudo ninja && sudo ninja install
+      - name: Delete fontforge artifacts
+        run: rm -rf fontforge
+      - name: Sparse clone nerd-fonts repo
+        run: git clone --filter=blob:none --sparse https://github.com/ryanoasis/nerd-fonts .
+      - name: Set sparse-checkout patterns
+        run: git sparse-checkout set font-patcher src/glyphs
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
           name: iosevka-term
           path: unpatched
+      - name: Save font-patcher arguments
+        run: echo NF_ARGS=\"-q --careful --pomicons --fontawesome --fontawesomeextension --material --weather --fontlogos --octicons --codicons\" >> $GITHUB_ENV
+      - name: Check args
+        run: echo ${{ env.NF_ARGS }}
       - name: Patch fonts
         # use sparse-checkout of repo instead of docker
-        # run: for font in unpatched/*.ttf; do fontforge ./font-patcher ...
-
         # we already have:  --powerline --powerlineextra
         # think about these:  --powersymbols
-        run: docker run -v ${{ github.workspace }}/unpatched:/in -v ${{ github.workspace }}/patched:/out nerdfonts/patcher -q --careful --pomicons --fontawesome --fontawesomeextension --material --weather --fontlogos --octicons --codicons || true
+        run: for font in unpatched/*.ttf; do fontforge -script ./font-patcher -out patched ${{ env.NF_ARGS }} "$font"; done || true
       - name: Summary
         run: tree
       - name: Create release archives
