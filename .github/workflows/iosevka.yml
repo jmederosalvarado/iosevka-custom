@@ -54,7 +54,7 @@ jobs:
         run: curl -fsSLO https://github.com/be5invis/Iosevka/releases/download/v${{ env.IOSEVKA_VERSION }}/ttf-iosevka-term-${{ env.IOSEVKA_VERSION }}.zip
       - name: Unzip iosevka term
         if: steps.cache.outputs.cache-hit != 'true'
-        run: unzip ttf-iosevka-${{ env.IOSEVKA_VERSION }}.zip iosevka-term-{regular,bold,italic,bolditalic}.ttf
+        run: unzip ttf-iosevka-term-${{ env.IOSEVKA_VERSION }}.zip iosevka-term-{regular,bold,italic,bolditalic}.ttf
       - name: Remove zip
         if: steps.cache.outputs.cache-hit != 'true'
         run: rm *.zip
