@@ -73,6 +73,8 @@ jobs:
         # we already have:  --powerline --powerlineextra
         # think about these:  --powersymbols
         run: docker run -v ${{ github.workspace }}/unpatched:/in -v ${{ github.workspace }}/patched:/out nerdfonts/patcher -q --careful --pomicons --fontawesome --fontawesomeextension --material --weather --fontlogos --octicons --codeicons 2>/dev/null || true
+      - name: Summary
+        run: tree
       - name: Create release archives
         run: cd patched && zip -r ../ttf-iosevka-term-nf.zip .
       - name: Release
