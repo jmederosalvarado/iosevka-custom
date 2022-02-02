@@ -26,6 +26,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: unzip ttf-iosevka-term-${{ env.IOSEVKA_VERSION }}.zip iosevka-term-{regular,bold,italic,bolditalic}.ttf
       - name: Remove zip
+        if: steps.cache.outputs.cache-hit != 'true'
         run: rm *.zip
       - name: Upload artifacts
         if: steps.cache.outputs.cache-hit != 'true'
