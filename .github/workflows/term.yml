@@ -79,15 +79,21 @@ jobs:
         with:
           name: iosevka-term
           path: unpatched
-      - name: Save font-patcher arguments
-        run: echo NF_ARGS=\"-q --careful --pomicons --fontawesome --fontawesomeextension --material --weather --fontlogos --octicons --codicons\" >> $GITHUB_ENV
-      - name: Check args
-        run: echo ${{ env.NF_ARGS }}
       - name: Patch fonts
         # use sparse-checkout of repo instead of docker
         # we already have:  --powerline --powerlineextra
         # think about these:  --powersymbols
-        run: for font in unpatched/*.ttf; do fontforge -script ./font-patcher -out patched ${{ env.NF_ARGS }} "$font"; done || true
+        run: >
+          for font in unpatched/*.ttf; do fontforge -script ./font-patcher
+          --pomicons
+          --fontawesome
+          --fontawesomeextension
+          --material
+          --weather
+          --fontlogos
+          --octicons
+          --codicons
+          -out patched -q --careful "$font"; done || true
       - name: Summary
         run: tree
       - name: Create release archives
