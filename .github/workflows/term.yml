@@ -1,4 +1,7 @@
-on: push
+on:
+  push:
+  schedule:
+    - cron: '0 10 * * *'
 
 jobs:
   download:
@@ -93,9 +96,7 @@ jobs:
           --fontlogos
           --octicons
           --codicons
-          -out patched -q --careful "$font"; done || true
-      - name: Summary
-        run: tree
+          -out patched -q --careful "$font" 2>/dev/null; done || true
       - name: Create release archives
         run: cd patched && zip -r ../ttf-iosevka-term-nf.zip .
       - name: Release
@@ -105,4 +106,4 @@ jobs:
           tag_name: latest
           files: ttf-iosevka-term-nf.zip
       - name: Summary
-        run: tree
+        run: date && tree
