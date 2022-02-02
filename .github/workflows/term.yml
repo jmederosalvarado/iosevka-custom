@@ -45,7 +45,7 @@ jobs:
         with:
           name: iosevka-term
       - name: Create release archives
-        run: zip ttf-iosevka-term.zip .
+        run: zip ttf-iosevka-term.zip *
       - name: Create and upload release
         uses: softprops/action-gh-release@v1
         with:
