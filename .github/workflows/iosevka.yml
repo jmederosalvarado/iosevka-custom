@@ -1,7 +1,7 @@
 on: push
 
 jobs:
-  cherry-pick:
+  normal:
     runs-on: ubuntu-latest
     steps:
       - name: Fetch latest release
@@ -17,16 +17,46 @@ jobs:
         uses: actions/cache@v2
         id: cache
         with:
-          path: iosevka
-          key: ${{ env.IOSEVKA_VERSION }}
+          path: unpatched
+          key: ${{ env.IOSEVKA_VERSION }}-normal
       - name: Download iosevka
         if: steps.cache.outputs.cache-hit != 'true'
         run: curl -fsSLO https://github.com/be5invis/Iosevka/releases/download/v${{ env.IOSEVKA_VERSION }}/ttf-iosevka-${{ env.IOSEVKA_VERSION }}.zip
+      - name: Unzip iosevka
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: unzip ttf-iosevka-${{ env.IOSEVKA_VERSION }}.zip iosevka-{regular,bold,italic,bolditalic}.ttf
+      - name: Remove zip
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: rm *.zip
+      - name: Summary
+        run: tree
+  
+  term:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch latest release
+        uses: octokit/request-action@v2.x
+        id: fetch_latest_release
+        with:
+          route: GET /repos/be5invis/Iosevka/releases/latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Parse version from release tag
+        run: echo IOSEVKA_VERSION=$(echo ${{ fromJson(steps.fetch_latest_release.outputs.data).tag_name }} | sed 's/^v//') >> $GITHUB_ENV
+      - name: Setup cache
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: unpatched
+          key: ${{ env.IOSEVKA_VERSION }}-term
       - name: Download iosevka term
         if: steps.cache.outputs.cache-hit != 'true'
         run: curl -fsSLO https://github.com/be5invis/Iosevka/releases/download/v${{ env.IOSEVKA_VERSION }}/ttf-iosevka-term-${{ env.IOSEVKA_VERSION }}.zip
-      - name: Unzip iosevka downloads
+      - name: Unzip iosevka term
         if: steps.cache.outputs.cache-hit != 'true'
-        run: unzip ttf-iosevka-*-${{ env.IOSEVKA_VERSION }}.zip
-      - name: Cherry pick iosevka files
+        run: unzip ttf-iosevka-${{ env.IOSEVKA_VERSION }}.zip iosevka-term-{regular,bold,italic,bolditalic}.ttf
+      - name: Remove zip
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: rm *.zip
+      - name: Summary
         run: tree
