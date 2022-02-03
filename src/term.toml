@@ -9,7 +9,7 @@
 
 [buildPlans.iosevka-term-custom]
 family = "Iosevka Term Custom"
-spacing = "normal"
+spacing = "term"
 serifs = "sans"
 
 # Disables `cv##` and `ss##` OpenType features.
