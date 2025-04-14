@@ -61,6 +61,7 @@ jobs:
         with:
           name: iosevka-term-custom-ttc
           path: dist/.super-ttc/*
+          include-hidden-files: true
 
   release:
     runs-on: ubuntu-latest
