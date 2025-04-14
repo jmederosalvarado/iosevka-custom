@@ -28,7 +28,7 @@ jobs:
         id: cache
         with:
           path: |
-            dist/iosevka-term-custom
+            dist/IosevkaTermCustom
             dist/.super-ttc
           key: ${{ env.IOSEVKA_VERSION }}-${{ hashFiles('private-build-plans.toml') }}
       - name: Setup nodejs
@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: iosevka-term-custom-ttf
-          path: dist/iosevka-term-custom/ttf/*
+          path: dist/IosevkaTermCustom/ttf/*
       - name: Upload TTC artifacts
         uses: actions/upload-artifact@v4
         with:
