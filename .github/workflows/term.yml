@@ -49,11 +49,13 @@ jobs:
       - name: Build TTC font
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm run build -- super-ttc::IosevkaTermCustom
+      - name: Show build tree
+        run: tree -a dist
       - name: Upload TTF artifacts
         uses: actions/upload-artifact@v4
         with:
           name: iosevka-term-custom-ttf
-          path: dist/IosevkaTermCustom/ttf/*
+          path: dist/IosevkaTermCustom/TTF/*
       - name: Upload TTC artifacts
         uses: actions/upload-artifact@v4
         with:
