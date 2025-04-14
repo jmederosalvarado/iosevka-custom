@@ -17,21 +17,21 @@ jobs:
       - name: Parse version from release tag
         run: echo IOSEVKA_VERSION=$(echo ${{ fromJson(steps.fetch_latest_release.outputs.data).tag_name }} | sed 's/^v//') >> $GITHUB_ENV
       - name: Checkout latest release
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: be5invis/Iosevka
           ref: v${{ env.IOSEVKA_VERSION }}
       - name: Download private build plan
         run: curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/src/term.toml" -o private-build-plans.toml
       - name: Setup cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: cache
         with:
           path: dist/iosevka-term-custom
           key: ${{ env.IOSEVKA_VERSION }}-${{ hashFiles('private-build-plans.toml') }}
       - name: Setup nodejs
         if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
           cache: 'npm'
@@ -45,9 +45,9 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm run build -- ttf::IosevkaTermCustom
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: iosevka-term
+          name: iosevka-term-custom
           path: dist/iosevka-term-custom/ttf/*
       - name: Summary
         run: tree
@@ -57,13 +57,13 @@ jobs:
     needs: build
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: iosevka-term-custom
       - name: Create release archives
         run: zip ttf-iosevka-term-custom.zip *
       - name: Create and upload release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           name: Iosevka
           tag_name: latest
